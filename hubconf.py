@@ -142,6 +142,7 @@ def save_model(model1, mypath="model.pth"):
     print("Saved PyTorch Model State to model.pth")
 
 
+
 def load_model(mypath="model.pth"):
     model = NeuralNetwork()
     model.load_state_dict(torch.load("model.pth"))
