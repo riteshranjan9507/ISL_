@@ -21,14 +21,13 @@ classes = [
     "Ankle boot",
 ]
 
-
 # Define model
 class NeuralNetwork(nn.Module):
-    def _init_(self):
-        super(NeuralNetwork, self)._init_()
+    def __init__(self):
+        super(NeuralNetwork, self).__init__()
         self.flatten = nn.Flatten()
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28 * 28, 512),
+            nn.Linear(28*28, 512),
             nn.ReLU(),
             nn.Linear(512, 512),
             nn.ReLU(),
@@ -40,7 +39,6 @@ class NeuralNetwork(nn.Module):
         logits = self.linear_relu_stack(x)
         return logits
 
-
 #############################
 
 def get_lossfn_and_optimizer(mymodel):
@@ -50,6 +48,7 @@ def get_lossfn_and_optimizer(mymodel):
 
 
 def load_data():
+
     # Download training data from open datasets.
     training_data = datasets.FashionMNIST(
         root="data",
@@ -65,13 +64,13 @@ def load_data():
         download=True,
         transform=ToTensor(),
     )
-
+    
     return training_data, test_data
-
 
 #############################
 
 def create_dataloaders(training_data, test_data, batch_size=64):
+
     # Create data loaders.
     train_dataloader = DataLoader(training_data, batch_size=batch_size)
     test_dataloader = DataLoader(test_data, batch_size=batch_size)
@@ -80,13 +79,13 @@ def create_dataloaders(training_data, test_data, batch_size=64):
         print(f"Shape of X [N, C, H, W]: {X.shape}")
         print(f"Shape of y: {y.shape} {y.dtype}")
         break
-
+        
     return train_dataloader, test_dataloader
-
-
+  
 #############################
 
 def get_model():
+    
     model = NeuralNetwork().to(device)
 
     return model
@@ -110,8 +109,7 @@ def _train(dataloader, model, loss_fn, optimizer):
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
-
-
+            
 def _test(dataloader, model, loss_fn):
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
@@ -125,23 +123,19 @@ def _test(dataloader, model, loss_fn):
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
-    print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-
-
+    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    
 def train(train_dataloader, test_dataloader, model1, loss_fn1, optimizer1, epochs=5):
     for t in range(epochs):
-        print(f"Epoch {t + 1}\n-------------------------------")
+        print(f"Epoch {t+1}\n-------------------------------")
         _train(train_dataloader, model1, loss_fn1, optimizer1)
         _test(test_dataloader, model1, loss_fn1)
     print("Done!")
     return model1
 
-
-def save_model(model1, mypath="model.pth"):
+def save_model(model1,mypath="model.pth"):
     torch.save(model1.state_dict(), "model.pth")
     print("Saved PyTorch Model State to model.pth")
-
-
 
 def load_model(mypath="model.pth"):
     model = NeuralNetwork()
@@ -156,3 +150,7 @@ def sample_test(model1, test_data):
         pred = model1(x)
         predicted, actual = classes[pred[0].argmax(0)], classes[y]
         print(f'Predicted: "{predicted}", Actual: "{actual}"')
+        
+        
+        
+    
